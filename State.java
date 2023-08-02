@@ -45,6 +45,16 @@ public class State {
         this.isFinalState = isFinalState;
     }
 
+    // returns the hashmap itself
+    public Map<Character, ArrayList<TransitionKey>> getTransitions() {
+        return transitions;
+    }
+
+    // returns the arraylist based on the input
+    public ArrayList<TransitionKey> getTransitionByInput(char input) {
+        return transitions.get(input);
+    }
+
     // create a function to add transitions
     public void addTransition(Character inputSymbol, TransitionKey transkey) {
         // check if input symbol is not already in the map

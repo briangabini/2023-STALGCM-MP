@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.Stack;
 
@@ -52,13 +53,13 @@ public class Machine {
             // read the number of states
             int numStates = Integer.parseInt(reader.readLine().trim());
 
-            System.out.println("numStates = " + numStates);
+            // System.out.println("numStates = " + numStates);
 
             // read each state, the state names will be read and will be attached to each of
             // the State object
             String[] states = reader.readLine().trim().split(" ");
 
-            System.out.println("States = " + Arrays.toString(states));
+            // System.out.println("States = " + Arrays.toString(states));
 
             // check if the number of states is matching with the states provided
             if (numStates <= 0 || (numStates != states.length)) {
@@ -70,19 +71,19 @@ public class Machine {
             for (int i = 0; i < numStates; i++) {
                 this.states.add(new State(states[i]));
 
-                System.out.println("States " + i + " = " + this.states.get(i).getName());
+                // System.out.println("States " + i + " = " + this.states.get(i).getName());
             }
 
             // read the number of inputs
             int numInputs = Integer.parseInt(reader.readLine().trim());
 
-            System.out.println("NumInputs = " + numInputs);
+            // System.out.println("NumInputs = " + numInputs);
 
             // iterate and read over every input state
             String[] inputSymbols = reader.readLine().trim().split(" ");
             this.inputAlphabet = new ArrayList<>();
 
-            System.out.println("InputAlphabet = " + Arrays.toString(inputSymbols));
+            // System.out.println("InputAlphabet = " + Arrays.toString(inputSymbols));
 
             for (int i = 0; i < inputSymbols.length; i++) {
                 if (inputSymbols[i].length() > 1 || (inputSymbols.length != numInputs)) {
@@ -99,19 +100,19 @@ public class Machine {
             this.inputAlphabet.add('<');
 
             for (int i = 0; i < this.inputAlphabet.size(); i++) {
-                System.out.println("Alphabet " + i + " = " + this.inputAlphabet.get(i));
+                // System.out.println("Alphabet " + i + " = " + this.inputAlphabet.get(i));
             }
 
             // read number of stack symbols
             int numStackSymbols = Integer.parseInt(reader.readLine().trim());
 
-            System.out.println("NumStackSymbols: " + numStackSymbols);
+            // System.out.println("NumStackSymbols: " + numStackSymbols);
 
             // iterate over every stack symbol
             String[] stackSymbols = reader.readLine().trim().split(" ");
             this.stackAlphabet = new ArrayList<>();
 
-            System.out.println("StackSymbols = " + Arrays.toString(stackSymbols));
+            // System.out.println("StackSymbols = " + Arrays.toString(stackSymbols));
 
             for (int i = 0; i < stackSymbols.length; i++) {
                 if (stackSymbols[i].length() > 1 || stackSymbols.length != numStackSymbols) {
@@ -121,16 +122,16 @@ public class Machine {
             }
             this.stackAlphabet.add('^');
 
-            System.out.println("Stack Alphabet Size: " + this.stackAlphabet.size());
+            // System.out.println("Stack Alphabet Size: " + this.stackAlphabet.size());
 
             for (int i = 0; i < this.stackAlphabet.size(); i++) {
-                System.out.println("Stack Symbol " + i + " = " + this.stackAlphabet.get(i));
+                // System.out.println("Stack Symbol " + i + " = " + this.stackAlphabet.get(i));
             }
 
             // read no. of transitions
             int numTransitions = Integer.parseInt(reader.readLine().trim());
 
-            System.out.println("NumTransitions = " + numTransitions);
+            // System.out.println("NumTransitions = " + numTransitions);
 
             // TODO: capture the error later if the number of transitions doesn't match with
             // the provided transitions
@@ -143,7 +144,7 @@ public class Machine {
             for (int i = 0; i < numTransitions; i++) {
                 String[] transitions = reader.readLine().trim().split(" ");
 
-                System.out.println("Transition: " + Arrays.toString(transitions));
+                // System.out.println("Transition: " + Arrays.toString(transitions));
 
                 if (transitions.length != 8) {
                     throw new CustomException("Invalid transition.");
@@ -152,8 +153,8 @@ public class Machine {
                 State currentState = State.findStateByName(transitions[0], this.states);
                 State nextState = State.findStateByName(transitions[4], this.states);
 
-                System.out.println("Current State: " + currentState.getName());
-                System.out.println("Next State: " + nextState.getName());
+                // System.out.println("Current State: " + currentState.getName());
+                // System.out.println("Next State: " + nextState.getName());
 
                 /*
                  * System.out.println(this.inputAlphabet.contains(transitions[1].charAt(0)));
@@ -193,12 +194,12 @@ public class Machine {
             }
             this.initialState = initialState;
 
-            System.out.println("Initial State: " + this.initialState.getName());
+            // System.out.println("Initial State: " + this.initialState.getName());
 
             // read the initial stack symbol
             this.initialStackSymbol = reader.readLine().trim().charAt(0);
 
-            System.out.println("Init stack symbol: " + this.initialStackSymbol);
+            // System.out.println("Init stack symbol: " + this.initialStackSymbol);
 
             // push the initial stack symbol to the 2 stacks
             this.stack1 = new Stack<>();
@@ -207,8 +208,8 @@ public class Machine {
             this.stack1.push(this.initialStackSymbol);
             this.stack2.push(this.initialStackSymbol);
 
-            System.out.println(stack1.peek());
-            System.out.println(stack2.peek());
+            // System.out.println(stack1.peek());
+            // System.out.println(stack2.peek());
 
             // read the final state (accepting)
             State acceptingState = State.findStateByName(reader.readLine(), this.states);
@@ -219,9 +220,11 @@ public class Machine {
 
             this.finalState = acceptingState;
 
-            System.out.println(
-                    "Final State = " + this.finalState.getName() + " isFinalState: "
-                            + this.finalState.getIsFinalState());
+            /*
+             * //System.out.println(
+             * "Final State = " + this.finalState.getName() + " isFinalState: "
+             * + this.finalState.getIsFinalState());
+             */
 
             reader.close();
 
@@ -231,13 +234,30 @@ public class Machine {
     }
 
     public static void main(String[] args) {
-        System.out.println("Test");
+        // System.out.println("Test");
 
         try {
             File file = new File("machine.txt");
             Machine machine = new Machine(file);
 
-            System.out.println("Inside main: " + machine.initialStackSymbol);
+            /* print the transitions of all states */
+            /*
+             * for (int i = 0; i < machine.states.size(); i++) {
+             * for (int j = 0; j < machine.states.get(i).getTransitions().size(); j++) {
+             * System.out.println("Transition " + j + ":" + machine.);
+             * }
+             * }
+             */
+
+            // machine.states.get(i).getTransition
+
+            // Scanner scanner = new Scanner();
+            // System.out.print("Input string: ");
+            /*
+             * System.out.println(machine.states.get(0).getTransitionByInput('^').toString()
+             * );
+             */
+            System.out.println(machine.toString());
 
         } catch (Exception e) {
             System.out.println("An error occurred");
@@ -245,6 +265,25 @@ public class Machine {
 
         // System.out.println(Arrays.toString(machine.states.toArray()));
 
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Q = [");
+
+        for (int i = 0; i < states.size(); i++) {
+            sb.append(states.get(i).getName()).append(" ");
+        }
+
+        sb.append("]\n");
+        sb.append("Σ = ").append(inputAlphabet).append("\n");
+        sb.append("Γ = ").append(stackAlphabet).append("\n");
+        sb.append("Start State: ").append(initialState.getName()).append("\n");
+        sb.append("Initial Stack Symbol: ").append(initialStackSymbol).append("\n");
+        sb.append("Final State: ").append(finalState.getName()).append("\n");
+
+        return sb.toString();
     }
 
     // TODO: implement backtracking

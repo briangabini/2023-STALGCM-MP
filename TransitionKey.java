@@ -65,6 +65,13 @@ public class TransitionKey {
     public void setInputDirection(char inputDirection) {
         this.inputDirection = inputDirection;
     }
+
+    /* for debugging only */
+    @Override
+    public String toString() {
+        return this.stack1Pop + " " + this.stack2Pop + " " + this.state.getName() + " " + this.stack1Push + " "
+                + this.stack2Push + " " + this.inputDirection;
+    }
 }
 
 /*
