@@ -1,8 +1,3 @@
-/* 
- * This is an implementation of a 2-way 2-
- * 
- */
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -240,6 +235,8 @@ public class Machine {
             File file = new File("machine.txt");
             Machine machine = new Machine(file);
 
+            machine.currHead = 1; // start with the input and not the start marker '<'
+
             /* print the transitions of all states */
             /*
              * for (int i = 0; i < machine.states.size(); i++) {
@@ -257,7 +254,37 @@ public class Machine {
              * System.out.println(machine.states.get(0).getTransitionByInput('^').toString()
              * );
              */
-            System.out.println(machine.toString());
+            /* System.out.println("Check machine contents: ");
+            System.out.println(machine.toString()); */
+
+                // Read the input string from the user
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Input string: ");
+            String inputString = scanner.nextLine();
+
+            // Convert '^' to empty string for lambda transition
+            if (inputString.equals("^")) {
+                inputString = "";
+            } else {
+                inputString = "<" + inputString + ">";
+            }
+
+            inputString.trim();
+
+            // Initialize the input head to 0
+            machine.currHead = 1;
+
+            // Call the backtrack function with initial state and stacks
+            boolean isAccepted = machine.backtrack(machine.initialState, inputString, machine.stack1, machine.stack2, machine.currHead);
+
+            // Check if the input string is accepted or rejected
+            if (isAccepted) {
+                System.out.println("Input string is accepted!");
+            } else {
+                System.out.println("Input string is rejected!");
+            }
+
+            scanner.close();
 
         } catch (Exception e) {
             System.out.println("An error occurred");
@@ -265,6 +292,118 @@ public class Machine {
 
         // System.out.println(Arrays.toString(machine.states.toArray()));
 
+    }
+
+    public boolean backtrack(State currentState, String input, Stack<Character> stack1, Stack<Character> stack2, int inputHead) {
+        // TODO: if input is empty check if there are lambda transitions available
+
+        // TODO: handle lambda transitions (transition without reading from the input string)
+
+        // 3 conditions for a string to be accepted
+        /* 
+         * the input string is read until the end
+         * the current state is a final state
+         * the stack is empty
+         */
+
+        if (currentState.getIsFinalState() && inputHead == input.length() && stack1.isEmpty() && stack2.isEmpty()) {
+            return true; // Accepting path is found
+        }
+
+            // Get the current input symbol
+        char currentInputSymbol = '^'; // Default to lambda
+        if (inputHead >= 0 && inputHead < input.length()) {
+            currentInputSymbol = input.charAt(inputHead);
+        }
+
+        // Get possible transitions for the current state and input symbol (including lambda)
+        List<TransitionKey> transitions = new ArrayList<>();
+        /* if (currentState.getTransitionByInput(currentInputSymbol) != null) {
+            transitions.addAll(currentState.getTransitionByInput(currentInputSymbol));
+        }
+        if (currentState.getTransitionByInput('^') != null) {
+            transitions.addAll(currentState.getTransitionByInput('^'));
+        } */
+        List<TransitionKey> currentTransitions = currentState.getTransitionByInput(currentInputSymbol);
+
+        if (currentTransitions != null) {
+            // If the input symbol matches, add the corresponding transitions to the list
+            transitions.addAll(currentTransitions);
+        }
+
+        // Also, check for lambda transitions and add them to the list
+        List<TransitionKey> lambdaTransitions = currentState.getTransitionByInput('^');
+        if (lambdaTransitions != null) {
+            transitions.addAll(lambdaTransitions);
+        }
+
+        // If there are no transitions available, backtrack
+        if (transitions.isEmpty()) {
+            return false;
+        }
+
+        // Iterate through possible transitions
+        for (TransitionKey transition : transitions) {
+            // Save current stack configurations to restore later during backtracking
+            char stack1Top = stack1.peek();
+            char stack2Top = stack2.peek();
+            int currentInputHead = inputHead;
+
+            // Perform the transition by popping and pushing stack symbols
+            char stack1Pop = transition.getStack1Pop();
+            char stack2Pop = transition.getStack2Pop();
+
+            // Check if '^' represents no pop on stack1
+            if (stack1Pop != '^') {
+                if (stack1.isEmpty() || stack1.peek() != stack1Pop) {
+                    continue; // Invalid transition, backtrack to next possibility
+                }
+                stack1.pop();
+            }
+
+            // Check if '^' represents no pop on stack2
+            if (stack2Pop != '^') {
+                if (stack2.isEmpty() || stack2.peek() != stack2Pop) {
+                    continue; // Invalid transition, backtrack to next possibility
+                }
+                stack2.pop();
+            }
+
+            // Check if '^' represents no push on stack1
+            if (transition.getStack1Push() != '^') {
+                stack1.push(transition.getStack1Push());
+            }
+
+            // Check if '^' represents no push on stack2
+            if (transition.getStack2Push() != '^') {
+                stack2.push(transition.getStack2Push());
+            }
+
+            // Move the input head according to the transition direction (left or right)
+            char inputDirection = transition.getInputDirection();
+            if (inputDirection == 'R') {
+                currentInputHead++;
+            } else if (inputDirection == 'L') {
+                currentInputHead--;
+            }
+
+            // Recurse to the next state with updated configurations
+            boolean isPathFound = backtrack(transition.getState(), input, stack1, stack2, currentInputHead);
+
+            // If a valid path is found, return true
+            if (isPathFound) {
+                return true;
+            }
+
+            // Backtrack by restoring the previous stack configurations and input head
+            stack1.pop();
+            stack1.push(stack1Top);
+            stack2.pop();
+            stack2.push(stack2Top);
+        }
+
+        // If no valid path is found, return false
+        return false;
     }
 
     @Override
