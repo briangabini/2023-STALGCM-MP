@@ -37,6 +37,14 @@ public class State {
         this.name = name;
     }
 
+    public boolean getIsFinalState() {
+        return isFinalState;
+    }
+
+    public void setIsFinalState(boolean isFinalState) {
+        this.isFinalState = isFinalState;
+    }
+
     // create a function to add transitions
     public void addTransition(Character inputSymbol, TransitionKey transkey) {
         // check if input symbol is not already in the map
@@ -57,18 +65,21 @@ public class State {
             // input symbol is not in map
             ArrayList<TransitionKey> newtransitionArrList = new ArrayList<>();
             newtransitionArrList.add(transkey);
-            transitions.put(inputSymbol, transkey);
+            transitions.put(inputSymbol, newtransitionArrList);
         }
     }
 
     // this will be a helper function in order to locate the states in the list
     public static State findStateByName(String stateName, List<State> states) {
-        for (int i = 0; i < states.length; i++) {
+        int listLen = states.size();
+
+        for (int i = 0; i < listLen; i++) {
             if (states.get(i).getName().equals(stateName)) {
                 return states.get(i);
             }
         }
 
+        return null;
     }
 
 }
