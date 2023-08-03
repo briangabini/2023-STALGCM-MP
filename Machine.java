@@ -22,25 +22,25 @@ public class Machine {
     private Stack<Character> stack2;
     private int currHead; // the current symbol being read in the input string
 
+    /*
+     * inputs to read from the file in order
+     * 
+     * number of states
+     * state names
+     * number of inputs
+     * input symbols // lambda doesn't need to be explicitly defined '^'
+     * number of stack symbols
+     * stack symbols
+     * number of transitions
+     * transitions
+     * initial state
+     * initial stack symbol 'Z'
+     * final state
+     * 
+     */
+
     // constructor for the Machine, this will be used in the gui
     public Machine(File file) throws CustomException {
-
-        /*
-         * inputs to read from the file in order
-         * 
-         * number of states
-         * state names
-         * number of inputs
-         * input symbols // lambda doesn't need to be explicitly defined '^'
-         * number of stack symbols
-         * stack symbols
-         * number of transitions
-         * transitions
-         * initial state
-         * initial stack symbol 'Z'
-         * final state
-         * 
-         */
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -57,10 +57,14 @@ public class Machine {
             // System.out.println("States = " + Arrays.toString(states));
 
             // check if the number of states is matching with the states provided
-            if (numStates <= 0 || (numStates != states.length)) {
-                throw new CustomException(
-                        "Invalid number of states or the number of states doesn't match the provided states");
-            }
+            // assume input is correct
+            /*
+             * if (numStates <= 0 || (numStates != states.length)) {
+             * throw new CustomException(
+             * "Invalid number of states or the number of states doesn't match the provided states"
+             * );
+             * }
+             */
 
             this.states = new ArrayList<>();
             for (int i = 0; i < numStates; i++) {
@@ -90,7 +94,7 @@ public class Machine {
             }
 
             // add these to the input alphabet as well
-            this.inputAlphabet.add('^');
+            // this.inputAlphabet.add('^');
             this.inputAlphabet.add('>');
             this.inputAlphabet.add('<');
 
@@ -115,7 +119,7 @@ public class Machine {
                 }
                 this.stackAlphabet.add(stackSymbols[i].charAt(0));
             }
-            this.stackAlphabet.add('^');
+            // this.stackAlphabet.add('^');
 
             // System.out.println("Stack Alphabet Size: " + this.stackAlphabet.size());
 
@@ -128,22 +132,17 @@ public class Machine {
 
             // System.out.println("NumTransitions = " + numTransitions);
 
-            // TODO: capture the error later if the number of transitions doesn't match with
-            // the provided transitions
-            // TODO: capture the error later if the number of input symbols doesn't match
-            // with the provided input symbols
-
-            // add transitions to each state
-            // sample transition
-            // q1 // a ^ ^ q2 ^ ^ R
             for (int i = 0; i < numTransitions; i++) {
                 String[] transitions = reader.readLine().trim().split(" ");
 
                 // System.out.println("Transition: " + Arrays.toString(transitions));
 
-                if (transitions.length != 8) {
-                    throw new CustomException("Invalid transition.");
-                }
+                // assume input is correct so no need for this
+                /*
+                 * if (transitions.length != 8) {
+                 * throw new CustomException("Invalid transition.");
+                 * }
+                 */
 
                 State currentState = State.findStateByName(transitions[0], this.states);
                 State nextState = State.findStateByName(transitions[4], this.states);
@@ -165,28 +164,42 @@ public class Machine {
                  */
 
                 // check if
-                if (currentState != null && nextState != null && this.inputAlphabet.contains(transitions[1].charAt(0))
-                        && this.stackAlphabet.contains(transitions[2].charAt(0))
-                        && this.stackAlphabet.contains(transitions[3].charAt(0))
-                        && this.stackAlphabet.contains(transitions[5].charAt(0))
-                        && this.stackAlphabet.contains(transitions[6].charAt(0))
-                        && (transitions[7].charAt(0) == 'R' || transitions[7].charAt(0) == 'L')) {
+                /*
+                 * if (currentState != null && nextState != null &&
+                 * this.inputAlphabet.contains(transitions[1].charAt(0))
+                 * && (this.stackAlphabet.contains(transitions[2].charAt(0)) ||
+                 * transitions[2].charAt(0) == '^')
+                 * && (this.stackAlphabet.contains(transitions[3].charAt(0)) ||
+                 * transitions[3].charAt(0) == '^')
+                 * && (this.stackAlphabet.contains(transitions[5].charAt(0)) ||
+                 * transitions[5].charAt(0) == '^')
+                 * && (this.stackAlphabet.contains(transitions[6].charAt(0)) ||
+                 * transitions[6].charAt(0) == '^')
+                 * && (transitions[7].charAt(0) == 'R' || transitions[7].charAt(0) == 'L')) {
+                 */
 
-                    currentState.addTransition(transitions[1].charAt(0),
-                            new TransitionKey(transitions[2].charAt(0), transitions[3].charAt(0), nextState,
-                                    transitions[5].charAt(0), transitions[6].charAt(0), transitions[7].charAt(0)));
+                currentState.addTransition(transitions[1].charAt(0),
+                        new TransitionKey(transitions[2].charAt(0), transitions[3].charAt(0), nextState,
+                                transitions[5].charAt(0), transitions[6].charAt(0), transitions[7].charAt(0)));
 
-                } else {
-                    throw new CustomException("Invalid transitions");
-                    // System.out.println("Error transition");
-                }
+                // }
+                // assume input is correct
+                /*
+                 * else {
+                 * throw new CustomException("Invalid transitions");
+                 * // System.out.println("Error transition");
+                 * }
+                 */
             }
 
             // read the initial state (starting)
             State initialState = State.findStateByName(reader.readLine(), this.states);
-            if (initialState == null) {
-                throw new CustomException("Invalid Starting State");
-            }
+            // assume input is correct
+            /*
+             * if (initialState == null) {
+             * throw new CustomException("Invalid Starting State");
+             * }
+             */
             this.initialState = initialState;
 
             // System.out.println("Initial State: " + this.initialState.getName());
@@ -207,13 +220,17 @@ public class Machine {
             // System.out.println(stack2.peek());
 
             // read the final state (accepting)
-            State acceptingState = State.findStateByName(reader.readLine(), this.states);
-            if (acceptingState == null) {
-                throw new CustomException("Invalid Accepting State");
-            }
-            acceptingState.setIsFinalState(true);
+            State finalState = State.findStateByName(reader.readLine(), this.states);
 
-            this.finalState = acceptingState;
+            // assume input is correct
+            /*
+             * if (finalState == null) {
+             * throw new CustomException("Invalid Accepting State");
+             * }
+             */
+            finalState.setIsFinalState(true);
+
+            this.finalState = finalState;
 
             /*
              * //System.out.println(
@@ -232,10 +249,8 @@ public class Machine {
         // System.out.println("Test");
 
         try {
-            File file = new File("machine.txt");
+            File file = new File("machine3.txt");
             Machine machine = new Machine(file);
-
-            machine.currHead = 1; // start with the input and not the start marker '<'
 
             /* print the transitions of all states */
             /*
@@ -254,156 +269,119 @@ public class Machine {
              * System.out.println(machine.states.get(0).getTransitionByInput('^').toString()
              * );
              */
-            /* System.out.println("Check machine contents: ");
-            System.out.println(machine.toString()); */
 
-                // Read the input string from the user
+            System.out.println("Check machine contents: ");
+            System.out.println(machine.toString());
+
+            // Read the input string from the user
             Scanner scanner = new Scanner(System.in);
             System.out.print("Input string: ");
             String inputString = scanner.nextLine();
 
-            // Convert '^' to empty string for lambda transition
-            if (inputString.equals("^")) {
-                inputString = "";
-            } else {
-                inputString = "<" + inputString + ">";
-            }
-
             inputString.trim();
 
-            // Initialize the input head to 0
-            machine.currHead = 1;
-
-            // Call the backtrack function with initial state and stacks
-            boolean isAccepted = machine.backtrack(machine.initialState, inputString, machine.stack1, machine.stack2, machine.currHead);
-
-            // Check if the input string is accepted or rejected
-            if (isAccepted) {
-                System.out.println("Input string is accepted!");
-            } else {
-                System.out.println("Input string is rejected!");
-            }
+            var result = machine.checkStringAcceptance(inputString);
 
             scanner.close();
 
         } catch (Exception e) {
-            System.out.println("An error occurred");
+            System.out.println(e);
+            e.printStackTrace();
         }
 
         // System.out.println(Arrays.toString(machine.states.toArray()));
 
     }
 
-    public boolean backtrack(State currentState, String input, Stack<Character> stack1, Stack<Character> stack2, int inputHead) {
-        // TODO: if input is empty check if there are lambda transitions available
+    public boolean checkStringAcceptance(String input) {
+        input = "<" + input + ">"; // add start and end markers to the string
 
-        // TODO: handle lambda transitions (transition without reading from the input string)
+        State currentState = this.initialState; // initialize the start state
+        currHead = 0;
 
-        // 3 conditions for a string to be accepted
-        /* 
-         * the input string is read until the end
-         * the current state is a final state
-         * the stack is empty
-         */
-
-        if (currentState.getIsFinalState() && inputHead == input.length() && stack1.isEmpty() && stack2.isEmpty()) {
-            return true; // Accepting path is found
-        }
-
-            // Get the current input symbol
-        char currentInputSymbol = '^'; // Default to lambda
-        if (inputHead >= 0 && inputHead < input.length()) {
-            currentInputSymbol = input.charAt(inputHead);
-        }
-
-        // Get possible transitions for the current state and input symbol (including lambda)
-        List<TransitionKey> transitions = new ArrayList<>();
-        /* if (currentState.getTransitionByInput(currentInputSymbol) != null) {
-            transitions.addAll(currentState.getTransitionByInput(currentInputSymbol));
-        }
-        if (currentState.getTransitionByInput('^') != null) {
-            transitions.addAll(currentState.getTransitionByInput('^'));
-        } */
-        List<TransitionKey> currentTransitions = currentState.getTransitionByInput(currentInputSymbol);
-
-        if (currentTransitions != null) {
-            // If the input symbol matches, add the corresponding transitions to the list
-            transitions.addAll(currentTransitions);
-        }
-
-        // Also, check for lambda transitions and add them to the list
-        List<TransitionKey> lambdaTransitions = currentState.getTransitionByInput('^');
-        if (lambdaTransitions != null) {
-            transitions.addAll(lambdaTransitions);
-        }
-
-        // If there are no transitions available, backtrack
-        if (transitions.isEmpty()) {
-            return false;
-        }
-
-        // Iterate through possible transitions
-        for (TransitionKey transition : transitions) {
-            // Save current stack configurations to restore later during backtracking
-            char stack1Top = stack1.peek();
-            char stack2Top = stack2.peek();
-            int currentInputHead = inputHead;
-
-            // Perform the transition by popping and pushing stack symbols
-            char stack1Pop = transition.getStack1Pop();
-            char stack2Pop = transition.getStack2Pop();
-
-            // Check if '^' represents no pop on stack1
-            if (stack1Pop != '^') {
-                if (stack1.isEmpty() || stack1.peek() != stack1Pop) {
-                    continue; // Invalid transition, backtrack to next possibility
-                }
-                stack1.pop();
-            }
-
-            // Check if '^' represents no pop on stack2
-            if (stack2Pop != '^') {
-                if (stack2.isEmpty() || stack2.peek() != stack2Pop) {
-                    continue; // Invalid transition, backtrack to next possibility
-                }
-                stack2.pop();
-            }
-
-            // Check if '^' represents no push on stack1
-            if (transition.getStack1Push() != '^') {
-                stack1.push(transition.getStack1Push());
-            }
-
-            // Check if '^' represents no push on stack2
-            if (transition.getStack2Push() != '^') {
-                stack2.push(transition.getStack2Push());
-            }
-
-            // Move the input head according to the transition direction (left or right)
-            char inputDirection = transition.getInputDirection();
-            if (inputDirection == 'R') {
-                currentInputHead++;
-            } else if (inputDirection == 'L') {
-                currentInputHead--;
-            }
-
-            // Recurse to the next state with updated configurations
-            boolean isPathFound = backtrack(transition.getState(), input, stack1, stack2, currentInputHead);
-
-            // If a valid path is found, return true
-            if (isPathFound) {
+        while (true) {
+            if (currentState.getIsFinalState() && stack1.isEmpty() && stack2.isEmpty()
+                    && (currHead == input.length())) {
+                System.out.println("Accepted");
                 return true;
-            }
+            } else if ((currHead == input.length())
+                    && ((!stack1.isEmpty() || !stack2.isEmpty()) || !currentState.getIsFinalState())) {
+                System.out.println("Rejected");
+                return false;
+            } else {
+                // for debugging
 
-            // Backtrack by restoring the previous stack configurations and input head
-            stack1.pop();
-            stack1.push(stack1Top);
-            stack2.pop();
-            stack2.push(stack2Top);
+                /*
+                 * System.out.println("Current State: " + currentState.getName());
+                 * System.out.println("Current Input: " + input.charAt(currHead));
+                 * System.out.println("Stack 1 Contents:");
+                 * System.out.println(stack1.toString());
+                 * System.out.println("Stack 2 Contents:");
+                 * System.out.println(stack2.toString());
+                 */
+
+                TransitionKey transition = currentState.getTransitionByInput(input.charAt(currHead));
+
+                // this means that this is a dead branch
+                if (transition == null) {
+                    System.out.println("Rejected no transitions.");
+                    return false;
+                }
+
+                currentState = transition.getState();
+
+                // check if there are no transitions to the other state
+
+                System.out.println("Current stack1pop: " + transition.getStack1Pop());
+                System.out.println("Current stack2pop: " + transition.getStack2Pop());
+
+                // System.out.println();
+
+                if (transition.getInputDirection() == 'R')
+                    currHead++;
+                else if (transition.getInputDirection() == 'L')
+                    currHead--;
+
+                // if stack1 is not empty
+                if (!stack1.isEmpty()) {
+                    if (stack1.peek() != transition.getStack1Pop() && transition.getStack1Pop() != '^') {
+                        System.out.println("Rejected. Popping a different stack symbol.");
+                        return false;
+                    } else if (transition.getStack1Pop() == stack1.peek()) {
+                        // System.out.println("Popping something stack1");
+                        stack1.pop();
+                    }
+                } else if (stack1.isEmpty()) {
+                    if (transition.getStack1Pop() != '^') {
+                        // System.out.println("Rejected. Popping on an empty stack.");
+                        return false;
+                    }
+                }
+
+                if (!stack2.isEmpty()) {
+                    if (stack2.peek() != transition.getStack2Pop() && transition.getStack2Pop() != '^') {
+                        System.out.println("Rejected. Popping a different stack symbol.");
+                        return false;
+                    } else if (transition.getStack2Pop() == stack2.peek()) {
+                        // System.out.println("Popping something stack1");
+                        stack2.pop();
+                    }
+                } else if (stack2.isEmpty()) {
+                    if (transition.getStack2Pop() != '^') {
+                        System.out.println("Rejected. Popping on an empty stack.");
+                        return false;
+                    }
+                }
+
+                if (transition.getStack1Push() != '^')
+                    stack1.push(transition.getStack1Push());
+
+                if (transition.getStack2Push() != '^')
+                    stack2.push(transition.getStack2Push());
+
+            }
         }
 
-        // If no valid path is found, return false
-        return false;
     }
 
     @Override
@@ -424,7 +402,5 @@ public class Machine {
 
         return sb.toString();
     }
-
-    // TODO: implement backtracking
 
 }

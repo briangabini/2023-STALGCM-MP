@@ -1,3 +1,9 @@
+/*
+ * Guide
+ * δ(curr_state, input_symbol, stack1Pop, stack2_pop) → {(next_state,
+ * stack1_push, stack2_push, input_direction)}
+ */
+
 public class TransitionKey {
     private char stack1Pop; // char to pop in stack 1
     private char stack2Pop; // char to pop in stack 2
@@ -73,9 +79,3 @@ public class TransitionKey {
                 + this.stack2Push + " " + this.inputDirection;
     }
 }
-
-/*
- * Guide
- * δ(curr_state, input_symbol, stack1Pop, stack2_pop) → {(next_state,
- * stack1_push, stack2_push, input_direction)}
- */
