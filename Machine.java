@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +13,8 @@ import java.util.Set;
 import java.util.Stack;
 
 public class Machine {
+    TransitionKey transition=null;
+    StringBuilder sb1 = new StringBuilder();
     private List<State> states; // Set of states 'Q'
     private List<Character> inputAlphabet; // Input alphabet 'sigma'
     private List<Character> stackAlphabet;
@@ -245,63 +248,67 @@ public class Machine {
         }
     }
 
-    public static void main(String[] args) {
-        // System.out.println("Test");
-
-        try {
-            File file = new File("machine3.txt");
-            Machine machine = new Machine(file);
-
-            /* print the transitions of all states */
-            /*
-             * for (int i = 0; i < machine.states.size(); i++) {
-             * for (int j = 0; j < machine.states.get(i).getTransitions().size(); j++) {
-             * System.out.println("Transition " + j + ":" + machine.);
-             * }
-             * }
-             */
-
-            // machine.states.get(i).getTransition
-
-            // Scanner scanner = new Scanner();
-            // System.out.print("Input string: ");
-            /*
-             * System.out.println(machine.states.get(0).getTransitionByInput('^').toString()
-             * );
-             */
-
-            System.out.println("Check machine contents: ");
-            System.out.println(machine.toString());
-
-            // Read the input string from the user
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Input string: ");
-            String inputString = scanner.nextLine();
-
-            inputString.trim();
-
-            var result = machine.checkStringAcceptance(inputString);
-
-            scanner.close();
-
-        } catch (Exception e) {
-            System.out.println(e);
-            e.printStackTrace();
-        }
-
-        // System.out.println(Arrays.toString(machine.states.toArray()));
-
-    }
+//    public static void main(String[] args) {
+//        // System.out.println("Test");
+//
+//        try {
+//            File file = new File("machine3.txt");
+//            Machine machine = new Machine(file);
+//
+//            /* print the transitions of all states */
+//            /*
+//             * for (int i = 0; i < machine.states.size(); i++) {
+//             * for (int j = 0; j < machine.states.get(i).getTransitions().size(); j++) {
+//             * System.out.println("Transition " + j + ":" + machine.);
+//             * }
+//             * }
+//             */
+//
+//            // machine.states.get(i).getTransition
+//
+//            // Scanner scanner = new Scanner();
+//            // System.out.print("Input string: ");
+//            /*
+//             * System.out.println(machine.states.get(0).getTransitionByInput('^').toString()
+//             * );
+//             */
+//
+//            System.out.println("Check machine contents: ");
+//            System.out.println(machine.toString());
+//
+//            // Read the input string from the user
+//            Scanner scanner = new Scanner(System.in);
+//            System.out.print("Input string: ");
+//            String inputString = scanner.nextLine();
+//
+//            inputString.trim();
+//
+//            var result = machine.checkStringAcceptance(inputString);
+//
+//            System.out.println("ok hai gg"+result);
+//
+//            scanner.close();
+//
+//        } catch (Exception e) {
+//            System.out.println(e);
+//            e.printStackTrace();
+//        }
+//
+//        // System.out.println(Arrays.toString(machine.states.toArray()));
+//
+//    }
 
     public boolean checkStringAcceptance(String input) {
         input = "<" + input + ">"; // add start and end markers to the string
 
         State currentState = this.initialState; // initialize the start state
         currHead = 0;
-
+        sb1=new StringBuilder();
+sb1.append("Input "+input);
         while (true) {
             if (currentState.getIsFinalState() && stack1.isEmpty() && stack2.isEmpty()
                     && (currHead == input.length())) {
+
                 System.out.println("Accepted");
                 return true;
             } else if ((currHead == input.length())
@@ -324,6 +331,9 @@ public class Machine {
 
                 // this means that this is a dead branch
                 if (transition == null) {
+                    sb1.append("\n");
+                    sb1.append("Rejected no transitions.");
+                    sb1.append("\n");
                     System.out.println("Rejected no transitions.");
                     return false;
                 }
@@ -332,8 +342,16 @@ public class Machine {
 
                 // check if there are no transitions to the other state
 
-                System.out.println("Current stack1pop: " + transition.getStack1Pop());
-                System.out.println("Current stack2pop: " + transition.getStack2Pop());
+                sb1.append("\n");
+                sb1.append("Current stack1pop: " + transition.getStack1Pop());
+                sb1.append("\n");
+                sb1.append("Current stack2pop: " + transition.getStack2Pop());
+
+//                final output want to show in a gui
+
+
+                System.out.println("Current stack1pop:ok1 " + transition.getStack1Pop());
+                System.out.println("Current stack2pop:ok2 " + transition.getStack2Pop());
 
                 // System.out.println();
 
@@ -345,6 +363,8 @@ public class Machine {
                 // if stack1 is not empty
                 if (!stack1.isEmpty()) {
                     if (stack1.peek() != transition.getStack1Pop() && transition.getStack1Pop() != '^') {
+                        sb1.append("\n");
+                        sb1.append("Rejected. Popping a different stack symbol.");
                         System.out.println("Rejected. Popping a different stack symbol.");
                         return false;
                     } else if (transition.getStack1Pop() == stack1.peek()) {
@@ -360,6 +380,8 @@ public class Machine {
 
                 if (!stack2.isEmpty()) {
                     if (stack2.peek() != transition.getStack2Pop() && transition.getStack2Pop() != '^') {
+                        sb1.append("\n");
+                        sb1.append("Rejected. Popping a different stack symbol.");
                         System.out.println("Rejected. Popping a different stack symbol.");
                         return false;
                     } else if (transition.getStack2Pop() == stack2.peek()) {
@@ -368,6 +390,8 @@ public class Machine {
                     }
                 } else if (stack2.isEmpty()) {
                     if (transition.getStack2Pop() != '^') {
+                        sb1.append("\n");
+                        sb1.append("Rejected. Popping on an empty stack.");
                         System.out.println("Rejected. Popping on an empty stack.");
                         return false;
                     }
@@ -402,5 +426,6 @@ public class Machine {
 
         return sb.toString();
     }
+
 
 }
