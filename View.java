@@ -1,5 +1,4 @@
 
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -20,7 +19,7 @@ public class View {
     private JTabbedPane tabbedPane;
     private JScrollPane scrollPane;
     private JLabel stepCurrState, stepCurrInput;
-    private JTextArea textArea,textArea1;
+    private JTextArea textArea, textArea1;
 
     private File file;
 
@@ -28,18 +27,15 @@ public class View {
 
     private int stepIndex;
 
-
-
-
     public View() {
         this.mainFrame = new JFrame("2DFA");
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mainFrame.setLayout(null);
         this.mainFrame.setResizable(false);
-        this.mainFrame.setSize(500,500);
+        this.mainFrame.setSize(500, 500);
         this.mainFrame.setLocationRelativeTo(null);
 
-        //Build the menu
+        // Build the menu
         this.menuBar = new JMenuBar();
         this.menuFile = new JMenu("File");
         UIManager.put("MenuBar.background", Color.ORANGE);
@@ -59,11 +55,10 @@ public class View {
                     // For example, you can display its path or load its contents
                     System.out.println("Selected file: " + selectedFile.getAbsolutePath());
 
-                    try{
+                    try {
                         machine = new Machine(selectedFile);
-//                        System.out.println(machine.toString());
-                    }
-                    catch (Exception ex) {
+                        // System.out.println(machine.toString());
+                    } catch (Exception ex) {
                         System.out.println(ex);
                     }
                     displayMachineDefinition();
@@ -73,7 +68,6 @@ public class View {
         });
 
         this.menuInput = new JMenu("Input");
-
 
         this.menuItemInputStep = new JMenuItem("Step with Closure...");
 
@@ -95,7 +89,7 @@ public class View {
                 JPanel panel = new JPanel();
                 panel.add(new JLabel("Input"));
                 panel.add(textField);
-//                panel.add(this.textArea1);
+                // panel.add(this.textArea1);
 
                 // Show the input dialog with "OK" and "Cancel" buttons, and custom title
                 int result = JOptionPane.showOptionDialog(null,
@@ -119,31 +113,26 @@ public class View {
                     System.out.println(sb);
 
                     stepIndex = 0;
-                    var result1 = machine.checkStringAcceptance(inputText);
-if(result1==true){
-    this.scrollPane = new JScrollPane(this.textArea1);
-    machine.sb1.append("\n");
-    machine.sb1.append(result1);
+                    var result1 = machine.checkString(inputText);
+                    if (result1 == true) {
+                        this.scrollPane = new JScrollPane(this.textArea1);
+                        machine.sb1.append("\n");
+                        machine.sb1.append(result1);
 
-    this.textArea1.setText(String.valueOf(machine.sb1));
+                        this.textArea1.setText(String.valueOf(machine.sb1));
 
-}
-else {
+                    } else {
 
-    this.scrollPane = new JScrollPane(this.textArea1);
-    machine.sb1.append(result1);
+                        this.scrollPane = new JScrollPane(this.textArea1);
+                        machine.sb1.append(result1);
 
-    this.textArea1.setText(String.valueOf(machine.sb1));
+                        this.textArea1.setText(String.valueOf(machine.sb1));
 
-
-}
+                    }
                     System.out.print(result1);
 
-
                     tabbedPane.add("Simulate: " + inputText, this.textArea1);
-//                    tabbedPane.add(this.textArea1);
-
-
+                    // tabbedPane.add(this.textArea1);
 
                     tabbedPane.setSelectedIndex(0);
 
@@ -154,21 +143,19 @@ else {
             }
         });
 
-
-
         this.menuInput.add(this.menuItemInputStep);
-//        this.menuInput.add(this.menuItemInputFast);
+        // this.menuInput.add(this.menuItemInputFast);
 
         // Create a JTextArea
         this.textArea = new JTextArea();
         this.textArea.setEditable(false);
         this.textArea.setLineWrap(true);
         this.textArea.setWrapStyleWord(true);
-        this.textArea.setMargin(new Insets(20,20,20,20));
+        this.textArea.setMargin(new Insets(20, 20, 20, 20));
 
         // Create a JScrollPane and add the JTextArea to it
         this.scrollPane = new JScrollPane(this.textArea);
-//        this.scrollPane = new JScrollPane(this.textArea1);
+        // this.scrollPane = new JScrollPane(this.textArea1);
 
         this.tabbedPane = new JTabbedPane();
         this.tabbedPane.setBounds(0, 0, 484, 438);
@@ -183,7 +170,7 @@ else {
     }
 
     public void displayMachineDefinition() {
-//        this.mainFrame.getContentPane().removeAll();
+        // this.mainFrame.getContentPane().removeAll();
 
         this.mainFrame.setTitle("2DFA - " + file.getName());
         this.textArea.setText(machine.toString());
@@ -194,4 +181,3 @@ else {
     }
 
 }
-
