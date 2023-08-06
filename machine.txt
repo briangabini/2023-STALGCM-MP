@@ -6,6 +6,9 @@ a b
 X Y Z
 3
 q0 < ^ ^ q0 ^ ^ R
+q0 < ^ ^ q0 ^ ^ R
+q0 < ^ ^ q0 ^ ^ R
+q0 < ^ ^ q0 ^ ^ R
 q0 ^ ^ ^ q1 ^ ^ R
 q1 > Z Z q1 ^ ^ R
 q0
