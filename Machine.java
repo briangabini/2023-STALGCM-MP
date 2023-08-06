@@ -120,7 +120,7 @@ public class Machine {
             State finalState = State.getState(stateName, this.states);
             finalState.setIsFinalState(true);
             this.finalState = finalState;
-            
+
             machineTextReader.close();
         } catch (Exception e) {
             System.out.println("File not found: " + e.getMessage());
@@ -155,13 +155,13 @@ public class Machine {
     public boolean checkString(String input) {
         input = "<" + input + ">"; // add start and end markers to the string
 
-        State currentState = this.initialState; // initialize the start state
-        currHead = 0;
-
         sb1 = new StringBuilder();
         sb1.append("Input " + input);
 
         boolean stringAccepted = false;
+
+        State currentState = this.initialState; // initialize the start state
+        currHead = 0;
 
         // loop until the string is accepted or rejected
         while (true) {
